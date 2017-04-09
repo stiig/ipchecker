@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
 class IpsController < ApplicationController
+  skip_before_action :verify_authenticity_token
   before_action :set_ip, only: %i[show update destroy]
 
   def index
     @ips = Ip.all
   end
 
-  def show; end
+  def show
+    @statistic = @ip.statistic(params_for_date[:from], params_for_date[:to]) if params_for_date
+  end
 
   def create
     @ip = Ip.new(ip_params)
@@ -39,5 +42,12 @@ class IpsController < ApplicationController
 
   def ip_params
     params.require(:ip).permit(:address, :active)
+  end
+
+  def params_for_date
+    return unless params[:from].present? && params[:to].present?
+    { from: Time.zone.parse(params[:from]), to: Time.zone.parse(params[:to]) }
+  rescue
+    nil
   end
 end

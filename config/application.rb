@@ -23,5 +23,6 @@ module Ipchecker
     # -- all .rb files in that directory are automatically loaded.
     config.time_zone = 'UTC'
     config.secret_key_base = ENV['SECRET_KEY_BASE']
+    config.active_job.queue_adapter = :sidekiq
   end
 end

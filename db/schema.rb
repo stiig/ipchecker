@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170408110955) do
+ActiveRecord::Schema.define(version: 20170409112643) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "ip_statuses", force: :cascade do |t|
+    t.float    "duration"
+    t.boolean  "success",    default: false, null: false
+    t.integer  "ip_id",                      null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.index ["ip_id"], name: "index_ip_statuses_on_ip_id", using: :btree
+  end
 
   create_table "ips", force: :cascade do |t|
     t.inet     "address",                   null: false
@@ -23,4 +32,5 @@ ActiveRecord::Schema.define(version: 20170408110955) do
     t.index ["address"], name: "index_ips_on_address", unique: true, using: :btree
   end
 
+  add_foreign_key "ip_statuses", "ips"
 end
